@@ -1,0 +1,8 @@
+*.wasm
+*.js
+*.exe
+*.wasm.map
+.vscode
+*.data
+imgui.js
+imgui.html
