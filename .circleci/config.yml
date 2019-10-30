@@ -1,0 +1,35 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/circuitz
+    docker:
+      - image: ubuntu:rolling
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update -qq
+            apt-get install -y build-essential clang git ssh patchelf libgl1-mesa-dev libglu1-mesa-dev libglfw3-dev
+      - run:
+          name: Intall Emcripten
+          command: |
+            git clone https://github.com/emscripten-core/emsdk.git
+            cd emsdk
+            ./emsdk install latest
+            ./emsdk activate latest
+            source ./emsdk_env.sh
+            cd ..
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init --recursive
+      - run:
+          name: Build
+          command: |
+            make
+      - store_artifacts:
+          path: ~/circuitz/imgui.js
+          destination: imgui.js
+
+      - store_artifacts:
+          path: ~/circuitz/imgui.wasm
+          destination: imgui.wasm
