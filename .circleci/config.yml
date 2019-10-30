@@ -5,11 +5,16 @@ jobs:
     docker:
       - image: ubuntu:rolling
     steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init --recursive
+
       - run:
           name: Install dependencies
           command: |
             apt-get update -qq
             apt-get install -y build-essential clang git ssh patchelf libgl1-mesa-dev libglu1-mesa-dev libglfw3-dev
+      
       - run:
           name: Intall Emcripten
           command: |
@@ -19,9 +24,6 @@ jobs:
             ./emsdk activate latest
             source ./emsdk_env.sh
             cd ..
-      - checkout
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
       - run:
           name: Build
           command: |
